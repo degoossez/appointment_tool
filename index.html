@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="Description" content="Creating an appointment system in less than 15 minutes!">
+	<meta name="keywords" content="appointment,appointments">
+    <!-- Bootstrap CSS & Javascript-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+      
+	<!-- CSS adjustments -->
+	<link rel="stylesheet" type="text/css" href="customcss/custom.css">
+	<!-- icon library -->
+
+	<!-- Google Fonts -->
+
+	<!-- jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<!-- hreflang -->
+	<link rel="alternate" hreflang="nl-be" />
+	<!-- <link rel="alternate" href="https://www.borahvandoorslaer.be" hreflang="nl-be" /> -->
+	<!-- <link rel="alternate" href="https://borahvandoorslaer.be" hreflang="nl-be" /> -->
+
+    <title>Appointment tool - fast & easy!</title>
+	
+  </head>
+<script>
+	$(function(){
+		$("#header").load("navbar.html");
+	});
+	$(function(){
+		$("#footer").load("footer.html");
+	});
+</script>
+<body>
+    <div id="header">
+    </div>
+    <div class="container">
+            <!-- client info -->
+        <div class="row col-md-12" id="mezelf">
+                <ul>
+                    <li>
+                        <h2 class="custom_header_small" align="left">Persoonlijke gegevens:</h2> 
+                    </li>
+                    <li>
+                        <a class="orange_text font_Khula bold_text">Voornaam </a>
+                        <input id="firstname" type="text" name="firstname" class="input_box">
+                        <a class="orange_text font_Khula bold_text">Achternaam </a>
+                        <input id="lastname" type="text" name="lastname" class="input_box">
+                    </li>
+                    <li>
+                        <a class="orange_text font_Khula bold_text">Bedrijfsnaam </a>
+                        <input id="companyname" type="text" name="companyname" class="input_box">
+
+                    </li>
+                    <li>
+                        <a class="orange_text font_Khula bold_text">E-mail: </a>*<br>
+                        <input id="email" type="email" name="email" autocomplete="on" class="input_box">
+                    </li>
+                    <li>
+                        <a class="orange_text font_Khula bold_text">Telefoon: </a><br>
+                        <input id="phone" type="text" name="phone" class="input_box">
+                    </li>
+                    <li>
+                        <div class="radio" style="white-space:nowrap overflow:hidden">
+                            <ul style="padding-left: 0px !important">
+                            <li><h2 class="custom_header_small" align="left">Kies je consultatie: </h2></li>
+                            <li><label class="radio-inline orange_text font_Khula bold_text"><input type="radio" name="optradio" checked="checked" value="trail"> Proefabbonement voor 3 maanden.</label></li>
+                            <li><label class="radio-inline orange_text font_Khula bold_text"><input type="radio" name="optradio" value="paid"> Betalend abbonement.</label></li>
+					   </div>
+                    </li>                   
+                    <li><input type="checkbox" id="genagr">Ik ga akkoord met de <a class="brown_text" href="algemenevoorwaarden.html" target="_blank">algemene voorwaarden</a></li>
+                    <li><button class="controle_button orange_text font_Khula" onclick="confirm()">confirm</button><br></li>
+                </ul>
+
+        </div>
+    </div>
+    <div id="footer">
+    </div>
+</body>
+<script>
+	$(function(){
+		$("#header").load("navbar.html");
+	});
+	$(function(){
+		$("#footer").load("footer.html");
+	});
+	var plan_type = "trail";
+	var previousId = "";
+	$("input[name='optradio']").on("change", function () {
+	   plan_type = this.value;
+	});
+	function confirm(){
+        //get all values 		
+        var firstname = document.getElementById("firstname").value;
+        var lastname = document.getElementById("lastname").value;
+        var companyname = document.getElementById("companyname").value;
+        var email = document.getElementById("email").value;
+        var phone = document.getElementById("phone").value;
+        var genagr = document.getElementById("genagr").checked;
+        var duration = 12; //TODO: duration is currently a fix field, to be variable in a future version 
+
+        if(genagr == false){
+            alert("Please agree with the general terms.");
+        }
+        else{
+            //TODO: call function to check if user already exists -- check with email and company name
+            //call php function to create new user
+            var phpfile = 'client_backend.php';	
+            data =  {'action': 'createNewUser',
+                     'firstname':firstname,
+                     'lastname':lastname,
+                     'companyname':companyname,
+                     'email' : email,
+                     'phone' : phone,
+                     'plan_type' : plan_type,
+                     'duration' : duration};
+            $.post(phpfile, data, function (response) {
+                /*
+                if(response.includes("Gelieve")){
+                    alert(response);
+                }
+                else{
+                    while (document.getElementById("kalender").firstChild) {
+                        document.getElementById("kalender").removeChild(document.getElementById("kalender").firstChild);
+                    }
+                    $('#afspraken_container').html(response);
+                }*/
+                alert(response);
+            });	               
+        }
+	
+    }
+</script>
+</html>
